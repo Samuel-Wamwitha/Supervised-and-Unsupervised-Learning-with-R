@@ -1,0 +1,714 @@
+---
+title: "IP Week 12"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Defining the Question?
+## Specifying the Question
+A Kenyan entrepreneur has created an online cryptography course and would want to advertise it on her blog. She currently targets audiences originating from various countries. In the past, she ran ads to advertise a related course on the same blog and collected data in the process. She would now like to employ your services as a Data Science Consultant to help her identify which individuals are most likely to click on her ads.
+
+## Defining the metrics of success
+Perform data cleaning and exploratory data analysis effectively in R
+
+## Understanding the Context
+Exploratory Analysis is important for any business to provide insights from the data. We will perform Exploratory analysis of advertising dataset to provide insights.
+
+## Recording the Experimental Design
+ - Reading the Data
+ - Checking the Data
+ - Tidying the Data
+ - Exploratory Data Analysis
+
+## Data Relevance
+The dataset provided was relevant for the objective we set forour analysis.
+
+
+
+# Reading the Dataset
+```{r}
+# Loading the Dataset
+ad = read.csv('advertising.csv')
+```
+
+
+
+# Checking the Dataset
+```{r}
+# Checking the shape of the dataset
+dim(ad)
+```
+The dataset contains 1000 rows and 10 columns.
+
+
+```{r}
+# Previewing the top of the Dataset
+head(ad)
+```
+
+
+```{r}
+# Previewing the bottom of the Dataset
+tail(ad)
+```
+
+
+```{r}
+# Checking the Datatypes of the columns
+str(ad)
+```
+The dataset contains 2 columns of datatype num, 4 columns of datatype character and 3 columns of datatype int.
+
+```{r}
+# Checking for Duplicates
+anyDuplicated(ad)
+```
+The were no duplicates in our dataset.
+
+
+
+# Tidying the Dataset
+##Missing values
+```{r}
+# Checking for missing values
+colSums(is.na(ad))
+```
+
+
+## Outliers
+```{r}
+# Checking for Outliers in Daily.Time.Spent.on.Site column
+boxplot(ad$Daily.Time.Spent.on.Site)
+```
+
+
+```{r}
+# Checking for Outliers in Age column
+boxplot(ad$Age)
+```
+
+
+```{r}
+# Checking for Outliers in Area.Income column
+boxplot(ad$Area.Income)
+```
+
+
+```{r}
+# Checking for Outliers in Daily.Internet.Usage column
+boxplot(ad$Daily.Internet.Usage)
+```
+From the boxplots only the Area income column had outliers.
+
+
+```{r}
+# Checking the list of Outliers in Area.Income column
+boxplot.stats(ad$Area.Income)$out
+```
+There were 8 Outliers in the Area income column.
+The Outliers in the Area income were not removed because it was unnecessary and could not affect the data.
+
+
+
+# Exploratory Data Analysis
+## Univariate Analysis
+### Counts
+```{r}
+# Checking the counts of those who clicked on ads 
+library(plyr)
+count(ad$Clicked.on.Ad)
+```
+
+
+```{r}
+# Checking the counts of Males in the Datasets
+count(ad$Male)
+```
+
+
+```{r}
+# Checking the counts of the countries
+count(ad$Country)
+```
+
+
+```{r}
+a = count(ad$Age)
+a
+```
+
+
+```{r}
+plot(a)
+```
+
+
+
+### Mean
+```{r}
+mean(ad$Daily.Time.Spent.on.Site)
+```
+
+
+```{r}
+mean(ad$Age)
+```
+
+
+```{r}
+mean(ad$Area.Income)
+```
+
+
+```{r}
+mean(ad$Daily.Internet.Usage)
+```
+
+From the analysis the means of Daily time spent, Age, Area income and Daily internet usage are 65.0002, 36.009, 55000, and 180.0001 respectively.
+
+
+### Median
+```{r}
+median(ad$Daily.Time.Spent.on.Site)
+```
+
+
+```{r}
+median(ad$Age)
+```
+
+
+```{r}
+median(ad$Area.Income)
+```
+
+
+```{r}
+median(ad$Daily.Internet.Usage)
+```
+
+From the analysis the medians of Daily time spent, Age, Area income and Daily internet usage are 68.215, 35, 57012.3, and 183.13 respectively.
+
+
+### Mode
+```{r}
+getmode <- function(v) {
+   uniqv <- unique(v)
+   uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+```
+
+
+```{r}
+getmode(ad$Daily.Time.Spent.on.Site)
+```
+
+
+```{r}
+getmode(ad$Age)
+```
+
+
+```{r}
+getmode(ad$Area.Income)
+```
+
+
+```{r}
+getmode(ad$Daily.Internet.Usage)
+```
+
+From the analysis the modes of Daily time spent, Age, Area income and Daily internet usage are 62.26, 31, 61833.9, and 167.22 respectively.
+
+
+### Maximum
+```{r}
+max(ad$Daily.Time.Spent.on.Site)
+```
+
+
+```{r}
+max(ad$Age)
+```
+
+
+```{r}
+max(ad$Area.Income)
+```
+
+
+```{r}
+max(ad$Daily.Internet.Usage)
+```
+
+From the analysis the maximum values of Daily time spent, Age, Area income and Daily internet usage are 91.43, 61, 79484.8, and 269.96 respectively.
+
+
+### Minimum
+```{r}
+min(ad$Daily.Time.Spent.on.Site)
+```
+
+
+```{r}
+min(ad$Age)
+```
+
+
+```{r}
+min(ad$Area.Income)
+```
+
+
+```{r}
+min(ad$Daily.Internet.Usage)
+```
+
+From the analysis the minimum values of Daily time spent, Age, Area income and Daily internet usage are 32.6, 19, 13996.5, and 104.78 respectively.
+
+
+### Range
+```{r}
+range(ad$Daily.Time.Spent.on.Site)
+```
+
+
+```{r}
+range(ad$Age)
+```
+
+
+```{r}
+range(ad$Area.Income)
+```
+
+
+```{r}
+range(ad$Daily.Internet.Usage)
+```
+
+
+### Quantile
+```{r}
+quantile(ad$Daily.Time.Spent.on.Site)
+```
+
+
+```{r}
+quantile(ad$Age)
+```
+
+
+```{r}
+quantile(ad$Area.Income)
+```
+
+
+```{r}
+quantile(ad$Daily.Internet.Usage)
+```
+
+
+### Interquantile Range
+```{r}
+IQR(ad$Daily.Time.Spent.on.Site)
+```
+
+
+```{r}
+IQR(ad$Age)
+```
+
+
+```{r}
+IQR(ad$Area.Income)
+```
+
+
+```{r}
+IQR(ad$Daily.Internet.Usage)
+```
+
+From the analysis the interquantile ranges of Daily time spent, Age, Area income and Daily internet usage are 27.1875, 13, 18438.83, and 79.9625 respectively.
+
+
+### Variance
+```{r}
+var(ad$Daily.Time.Spent.on.Site)
+```
+
+
+```{r}
+var(ad$Age)
+```
+
+
+```{r}
+var(ad$Area.Income)
+```
+
+
+```{r}
+var(ad$Daily.Internet.Usage)
+```
+
+From the analysis the variances of Daily time spent, Age, Area income and Daily internet usage are 251.3371, 77.18611, 179952406, and 1927.415 respectively.
+
+
+### Standard Deviation
+```{r}
+sd(ad$Daily.Time.Spent.on.Site)
+```
+
+
+```{r}
+sd(ad$Age)
+```
+
+
+```{r}
+sd(ad$Area.Income)
+```
+
+
+```{r}
+sd(ad$Daily.Internet.Usage)
+```
+
+From the analysis the standard deviations of Daily time spent, Age, Area income and Daily internet usage are 15.85361, 8.785562, 13414.63, and 43.90234 respectively.
+
+
+### Skewness
+```{r}
+library(e1071)
+skewness(ad$Daily.Time.Spent.on.Site)
+```
+Daily time spent is fairly skewed.
+
+
+```{r}
+skewness(ad$Age)
+```
+Age is fairly skewed.
+
+
+```{r}
+skewness(ad$Area.Income)
+```
+Area income is moderately skewed to the left.
+
+
+```{r}
+skewness(ad$Daily.Internet.Usage)
+```
+Daily internet usage is fairly skewed.
+
+
+### Kurtosis
+```{r}
+kurtosis(ad$Daily.Time.Spent.on.Site)
+```
+The Daily time spent column has a platykurtic kurtosis. 
+
+
+```{r}
+kurtosis(ad$Age)
+```
+The Age column has a platykurtic kurtosis.
+
+
+```{r}
+kurtosis(ad$Area.Income)
+```
+The Area income column has a platykurtic kurtosis.
+
+
+```{r}
+kurtosis(ad$Daily.Internet.Usage)
+```
+The Daily internet usage column has a platykurtic kurtosis.
+
+
+### Histogram
+```{r}
+hist(ad$Daily.Time.Spent.on.Site)
+```
+
+
+```{r}
+hist(ad$Age)
+```
+
+
+```{r}
+hist(ad$Area.Income)
+```
+
+
+```{r}
+hist(ad$Daily.Internet.Usage)
+```
+
+
+## Bivariate Analysis
+```{r}
+ad2 = subset(ad, select = c(Daily.Time.Spent.on.Site, Age, Area.Income, Daily.Internet.Usage))
+
+head(ad2)
+```
+
+
+### Covariance
+```{r}
+# Finding the covariance of the variables
+cov(ad2)
+```
+From the analysis Daily time spent and Area income, Daily time spent and Daily internet usage, Area income and Daily internet usage all have positive covariances between them hence have a positive linear relationship.
+From the analysis Daily time spent and Age, Age and Area income, Age and Daily internet usage all have negative covariance between them hence have a negative linear relationship.
+
+
+### Correlation
+```{r}
+# Finding the correlation coefficients of 
+cor(ad2)
+```
+
+
+### Correlation Matrix
+```{r}
+#Creating a correlation matrix
+library('corrplot')
+
+corrplot(cor(ad2))
+```
+From the correlation and correlation matrix output it shows Daily time spent and Daily internet usage have a moderate positive correlation to each other. Age and Daily internet usage have a moderate negative correlation to each other.
+
+
+### Scatter Plots
+```{r}
+# Plotting a scatterplot between Age and Area income
+plot(ad$Age, ad$Area.Income, xlab="Age", ylab="Area Income")
+```
+The scatter plot between Age and Area income usage shows a negative relationship between the two.
+
+
+```{r}
+# Plotting a scatterplot between Age and Daily time spent 
+plot(ad$Age, ad$Daily.Time.Spent.on.Site, xlab="Age", ylab="Daily time spent")
+```
+The scatter plot between Age and Daily time spent shows a negative relationship between the two.
+
+
+```{r}
+# Plotting a scatterplot between Age and Daily internet usage
+plot(ad$Age, ad$Daily.Internet.Usage, xlab="Age", ylab="Daily internet usage")
+```
+The scatter plot between Age and Daily internet usage shows a negative relationship between the two.
+
+
+```{r}
+# Plotting a scatterplot between Daily time spent and Area income
+plot(ad$Daily.Time.Spent.on.Site, ad$Area.Income, xlab="Daily time spent", ylab="Area income")
+```
+The scatter plot between Daily time spent and Area income shows a positive relationship between the two.
+
+
+```{r}
+# Plotting a scatterplot between Daily internet usage and Area income
+plot(ad$Daily.Internet.Usage, ad$Area.Income, xlab="Daily internet usage", ylab="Area income")
+```
+The scatter plot between Area income and Daily internet usage shows a positive relationship between the two.
+
+
+```{r}
+# Plotting a scatterplot between Daily internet usage and Daily time spent
+plot(ad$Daily.Internet.Usage, ad$Daily.Time.Spent.on.Site, xlab="Daily internet usage", ylab="Daily time spent")
+```
+The scatter plot between Daily internet usage and Daily time spent shows a positive relationship between the two.
+
+
+### Bar Graphs
+```{r}
+ad3 = ad[, c(1,2,3,4,7,10)]
+head(ad3)
+```
+
+
+```{r}
+ad3[["Clicked.on.Ad"]] = factor(ad3[["Clicked.on.Ad"]])
+```
+
+
+
+```{r}
+library(ggplot2)
+
+a<-ggplot(data=ad3, aes(x=Age, y=Daily.Time.Spent.on.Site, fill=Clicked.on.Ad)) +
+  geom_bar(stat="identity")
+a
+```
+
+
+```{r}
+a<-ggplot(data=ad3, aes(x=Age, y=Daily.Internet.Usage, fill=Clicked.on.Ad)) +
+  geom_bar(stat="identity")
+a
+```
+
+
+```{r}
+a<-ggplot(data=ad3, aes(x=Age, y=Area.Income, fill=Clicked.on.Ad)) +
+  geom_bar(stat="identity")
+a
+```
+
+
+
+# Implementing the Solution
+## SVM
+```{r}
+# 
+library('caret')
+
+part <- createDataPartition(y = ad3$Clicked.on.Ad, p= 0.8, list = FALSE)
+trainset <- ad3[part,]
+testset <- ad3[-part,]
+```
+
+
+```{r}
+# Factorizing the tarhet variable
+trainset[["Clicked.on.Ad"]] = factor(trainset[["Clicked.on.Ad"]])
+
+```
+
+
+```{r}
+# Building a SVM Linear kernel model with hyperparameter tuning using repeated cross validation
+tc <- trainControl(method = "repeatedcv", number = 5, repeats = 5)
+
+sL <- train(Clicked.on.Ad ~., data = trainset, method = "svmLinear",
+trControl=tc,
+preProcess = c("center", "scale"),
+tuneLength = 10)
+
+# calling the model
+sL
+
+```
+
+
+```{r}
+# Predicting using the model
+test_pred <- predict(sL, newdata = testset)
+test_pred
+
+```
+
+
+```{r}
+# Getting the confusion matrix
+confusionMatrix(table(test_pred, testset$Clicked.on.Ad))
+
+```
+
+
+
+## KNN
+```{r}
+# 
+library('caret')
+
+# Creating a random number equal 80% of total number of rows
+rand <- sample(1:nrow(ad3),0.8 * nrow(ad3))
+
+# creating the normalization function
+nom <-function(x) { (x -min(x))/(max(x)-min(x))   }
+
+# Normalization the dataset
+ad_nor <- as.data.frame(lapply(ad3[,-c(6)], nom))
+
+```
+
+
+```{r}
+# Getting the trainset and testset
+trainset <- ad_nor[rand,]
+testset <- ad_nor[-rand,]
+
+# also convert ordered factor to normal factor
+ad_target <- as.factor(ad3[rand,6])
+ 
+# also convert ordered factor to normal factor
+test_target <- as.factor(ad3[-rand,6])
+
+```
+
+
+```{r}
+# Finding the best value for k
+library(caret)
+#i=1
+#k.optm=1
+#for (i in 1:19){
+  #knn.mod <- knn(train=trainset, test=testset, cl=ad_target, k=i)
+  #k.optm[i] <- 100 * sum(test_target == knn.mod)/NROW(test_target)
+  #k=i
+  #cat(k,'=',k.optm[i],'
+#')
+#}
+
+
+```
+The value of k with the highest accuracy was 19.
+
+
+```{r}
+# Building the knn model
+library(class)
+
+model <- knn(trainset,testset,cl=ad_target, k=19)
+ 
+# Creating the confusion matrix
+tb <- table(model, test_target)
+tb
+```
+
+
+```{r}
+# Checking the accuracy
+accuracy <- function(x){sum(diag(x)/(sum(rowSums(x)))) * 100}
+accuracy(tb)
+
+```
+
+
+
+# Challenging the Solution
+The solution can be challenged by performing Naive Bayes to enable the client to predict on which people are likely to click the advert about her business. If the Naive Bayes achieves a higher accuracy than SVM it will be best suited for the client.
+
+
+
+# Recommendations
+From the analysis the following recommendations can be made:
+
+ - The client should target people of ages 28 - 36 to attract more people to her business.
+ 
+ - The client should target people who spend about 60 - 70 minutes on the site daily since most people fall under this time line.
+ 
+ - The client should target people whose internet usage is 160 - 170 minutes daily because most people lie in this range.
+ 
+ - The client can focus more adverts in France and Czech Republic which had the most people at 9 each.
+ 
+ - The client should focus on the time spent and internet usage since they have a high correlation to each other and may influence on who clicks an ad or not.
+ 
+ - The client should use knn model to predict whether the customers are likely to click on an ad of her business since it had an accuracy of 98% compared to SVM which had an accuracy 97.5%.
+
+ 
+
+
+
+

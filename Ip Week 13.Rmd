@@ -1,0 +1,1118 @@
+---
+title: "IP Week 13"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Defining the Question?
+## Specifying the Question
+1. Perform clustering stating insights drawn from your analysis and visualizations.
+
+2. Upon implementation, provide comparisons between the approaches learned this week i.e. K-Means clustering vs Hierarchical clustering highlighting the strengths and limitations of each approach in the context of your analysis.
+
+## Defining the metrics of success
+Perform data cleaning, Exploratory data analysis and build unsupervised machine learning models effectively in R
+
+## Understanding the Context
+Companies need to understand their customers behavior to understand their customer base. Hence companies rely on unsupervised models to provide insights on customer behavior. We will be studying the behavior of Kira Plastinina customers and help the company get insights.
+
+## Recording the Experimental Design
+ - Reading the Data
+ - Checking the Data
+ - Tidying the Data
+ - Exploratory Data Analysis
+ - Performing K Means and Hierachical Clustering models
+
+## Data Relevance
+The dataset provided was relevant for the objective we set for our project.
+
+
+
+# Reading the Dataset
+```{r}
+# Loading the Dataset
+ons = read.csv('online_shoppers_intention.csv')
+```
+
+
+
+# Checking the Dataset
+```{r}
+# Checking the shape of the dataset
+dim(ons)
+```
+The dataset contains 1000 rows and 10 columns.
+
+
+```{r}
+# Previewing the top of the Dataset
+head(ons)
+```
+
+
+```{r}
+# Previewing the bottom of the Dataset
+tail(ons)
+```
+
+
+```{r}
+# Checking the Datatypes of the columns
+str(ons)
+```
+The dataset contains 7 columns of datatype integer, 7 columns of datatype num, 2 columns of datatype character and 2 columns of datatype logical.
+
+
+```{r}
+# Checking unique values of Visitor Type
+unique(ons$VisitorType)
+```
+
+```{r}
+# Checking unique values of Month
+unique(ons$Month)
+```
+
+```{r}
+# Checking unique values of Revenue
+unique(ons$Revenue)
+```
+
+
+```{r}
+# Checking for Duplicates
+anyDuplicated(ons)
+```
+There were 159 duplicates in our dataset.
+
+
+```{r}
+# Dropping the duplicates in the dataset
+ons = unique(ons)
+```
+
+
+# Tidying the Dataset
+## Missing values
+```{r}
+# Checking for missing values
+colSums(is.na(ons))
+```
+
+```{r}
+# Omitting null values
+ons = na.omit(ons)
+```
+
+
+## Outliers
+```{r}
+# Checking for Outliers in Administrative_Duration column
+boxplot(ons$Administrative_Duration)
+```
+
+
+```{r}
+# Checking for Outliers in Informational_Duration column
+boxplot(ons$Informational_Duration)
+```
+
+
+```{r}
+# Checking for Outliers in ProductRelated_Duration column
+boxplot(ons$ProductRelated_Duration)
+```
+
+
+```{r}
+# Checking for Outliers in Bounce Rates column
+boxplot(ons$BounceRates)
+```
+
+
+```{r}
+# Checking for Outliers in Exit Rates column
+boxplot(ons$ExitRates)
+```
+
+
+```{r}
+# Checking for Outliers in Operating Systems column
+boxplot(ons$OperatingSystems)
+```
+
+
+```{r}
+# Checking for Outliers in Traffic Type column
+boxplot(ons$TrafficType)
+```
+
+
+```{r}
+# Checking the list of Outliers in Administrative_Duration column
+boxplot.stats(ons$Administrative_Duration)$out
+```
+There are 404 Outliers in the Administrative column column.
+The Outliers in the various columns were not removed because there were many and could affect analysis on the data.
+
+
+
+# Exploratory Data Analysis
+## Univariate Analysis
+### Counts
+```{r}
+# Checking the counts of Revenue 
+library(plyr)
+count(ons$Revenue)
+```
+
+
+```{r}
+# Checking the counts of those who visited on Weekend
+count(ons$Weekend)
+```
+
+
+```{r}
+# Checking the counts of visitors type
+count(ons$VisitorType)
+```
+
+
+```{r}
+# Checking the counts of months
+count(ons$Month)
+```
+
+
+### Mean
+```{r}
+mean(ons$Administrative_Duration)
+```
+
+
+```{r}
+mean(ons$Informational_Duration)
+```
+
+
+```{r}
+mean(ons$ProductRelated_Duration)
+```
+
+
+```{r}
+mean(ons$BounceRates)
+```
+
+
+```{r}
+mean(ons$ExitRates)
+```
+
+
+```{r}
+mean(ons$PageValues)
+```
+
+
+```{r}
+mean(ons$OperatingSystems)
+```
+
+
+```{r}
+mean(ons$Browser)
+```
+
+
+### Median
+```{r}
+median(ons$Administrative_Duration)
+```
+
+
+```{r}
+median(ons$Informational_Duration)
+```
+
+
+```{r}
+median(ons$ProductRelated_Duration)
+```
+
+
+```{r}
+median(ons$BounceRates)
+```
+
+
+```{r}
+median(ons$ExitRates)
+```
+
+
+```{r}
+median(ons$PageValues)
+```
+
+
+```{r}
+median(ons$OperatingSystems)
+```
+
+
+```{r}
+median(ons$Browser)
+```
+
+
+### Mode
+```{r}
+getmode <- function(v) {
+   uniqv <- unique(v)
+   uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+```
+
+
+```{r}
+mode(ons$Administrative_Duration)
+```
+
+
+```{r}
+mode(ons$Informational_Duration)
+```
+
+
+```{r}
+mode(ons$ProductRelated_Duration)
+```
+
+
+```{r}
+mode(ons$BounceRates)
+```
+
+
+```{r}
+mode(ons$ExitRates)
+```
+
+
+```{r}
+mode(ons$PageValues)
+```
+
+
+```{r}
+mode(ons$OperatingSystems)
+```
+
+
+```{r}
+mode(ons$Browser)
+```
+
+
+### Maximum
+```{r}
+max(ons$Administrative_Duration)
+```
+
+
+```{r}
+max(ons$Informational_Duration)
+```
+
+
+```{r}
+max(ons$ProductRelated_Duration)
+```
+
+
+```{r}
+max(ons$BounceRates)
+```
+
+
+```{r}
+max(ons$ExitRates)
+```
+
+
+```{r}
+max(ons$PageValues)
+```
+
+
+```{r}
+max(ons$OperatingSystems)
+```
+
+
+```{r}
+max(ons$Browser)
+```
+
+
+### Minimum
+```{r}
+min(ons$Administrative_Duration)
+```
+
+
+```{r}
+min(ons$Informational_Duration)
+```
+
+
+```{r}
+min(ons$ProductRelated_Duration)
+```
+
+
+```{r}
+min(ons$BounceRates)
+```
+
+
+```{r}
+min(ons$ExitRates)
+```
+
+
+```{r}
+min(ons$PageValues)
+```
+
+
+```{r}
+min(ons$OperatingSystems)
+```
+
+
+```{r}
+min(ons$Browser)
+```
+
+
+### Range
+```{r}
+range(ons$Administrative_Duration)
+```
+
+
+```{r}
+range(ons$Informational_Duration)
+```
+
+
+```{r}
+range(ons$ProductRelated_Duration)
+```
+
+
+```{r}
+range(ons$BounceRates)
+```
+
+
+```{r}
+range(ons$ExitRates)
+```
+
+
+```{r}
+range(ons$PageValues)
+```
+
+
+```{r}
+range(ons$OperatingSystems)
+```
+
+
+```{r}
+range(ons$Browser)
+```
+
+
+### Quantile
+```{r}
+quantile(ons$Administrative_Duration)
+```
+
+
+```{r}
+quantile(ons$Informational_Duration)
+```
+
+
+```{r}
+quantile(ons$ProductRelated_Duration)
+```
+
+
+```{r}
+quantile(ons$BounceRates)
+```
+
+
+```{r}
+quantile(ons$ExitRates)
+```
+
+
+```{r}
+quantile(ons$PageValues)
+```
+
+
+```{r}
+quantile(ons$OperatingSystems)
+```
+
+
+```{r}
+quantile(ons$Browser)
+```
+
+
+### Interquantile Range
+```{r}
+IQR(ons$Administrative_Duration)
+```
+
+
+```{r}
+IQR(ons$Informational_Duration)
+```
+
+
+```{r}
+IQR(ons$ProductRelated_Duration)
+```
+
+
+```{r}
+IQR(ons$BounceRates)
+```
+
+
+```{r}
+IQR(ons$ExitRates)
+```
+
+
+```{r}
+IQR(ons$PageValues)
+```
+
+
+```{r}
+IQR(ons$OperatingSystems)
+```
+
+
+```{r}
+IQR(ons$Browser)
+```
+
+
+### Variance
+```{r}
+var(ons$Administrative_Duration)
+```
+
+
+```{r}
+var(ons$Informational_Duration)
+```
+
+
+```{r}
+var(ons$ProductRelated_Duration)
+```
+
+
+```{r}
+var(ons$BounceRates)
+```
+
+
+```{r}
+var(ons$ExitRates)
+```
+
+
+```{r}
+var(ons$PageValues)
+```
+
+
+```{r}
+var(ons$OperatingSystems)
+```
+
+
+```{r}
+var(ons$Browser)
+```
+
+
+### Standard Deviation
+```{r}
+sd(ons$Administrative_Duration)
+```
+
+
+```{r}
+sd(ons$Informational_Duration)
+```
+
+
+```{r}
+sd(ons$ProductRelated_Duration)
+```
+
+
+```{r}
+sd(ons$BounceRates)
+```
+
+
+```{r}
+sd(ons$ExitRates)
+```
+
+
+```{r}
+sd(ons$PageValues)
+```
+
+
+```{r}
+sd(ons$OperatingSystems)
+```
+
+
+```{r}
+sd(ons$Browser)
+```
+
+
+### Skewness
+```{r}
+library(e1071)
+skewness(ons$Administrative_Duration)
+```
+
+
+```{r}
+skewness(ons$Informational_Duration)
+```
+
+
+```{r}
+skewness(ons$ProductRelated_Duration)
+```
+
+
+```{r}
+skewness(ons$BounceRates)
+```
+
+
+```{r}
+skewness(ons$ExitRates)
+```
+
+
+```{r}
+skewness(ons$PageValues)
+```
+
+
+```{r}
+skewness(ons$OperatingSystems)
+```
+
+
+```{r}
+skewness(ons$Browser)
+```
+
+
+### Kurtosis
+```{r}
+kurtosis(ons$Administrative_Duration)
+```
+
+
+```{r}
+kurtosis(ons$Informational_Duration)
+```
+
+
+```{r}
+kurtosis(ons$ProductRelated_Duration)
+```
+
+
+```{r}
+kurtosis(ons$BounceRates)
+```
+
+
+```{r}
+kurtosis(ons$ExitRates)
+```
+
+
+```{r}
+kurtosis(ons$PageValues)
+```
+
+
+```{r}
+kurtosis(ons$OperatingSystems)
+```
+
+
+```{r}
+kurtosis(ons$Browser)
+```
+
+
+### Plots
+```{r}
+# 
+barplot(table(ons$Month),
+main = "Bargraph of months",
+xlab = "Months",
+ylab = "Freq",
+col = cm.colors(10),
+horiz = FALSE)
+```
+
+
+```{r}
+# 
+barplot(table(ons$Revenue),
+main = "Bargraph of Revenue",
+xlab = "Revenue",
+ylab = "Freq",
+col = cm.colors(2),
+horiz = FALSE)
+```
+
+
+```{r}
+# 
+barplot(table(ons$VisitorType),
+main = "Bargraph of Visitors type",
+xlab = "Visitors type",
+ylab = "Freq",
+col = topo.colors(3),
+horiz = FALSE)
+```
+
+
+
+```{r}
+# 
+barplot(table(ons$Weekend),
+main = "Bargraph of Weekend",
+xlab = "Weekend",
+ylab = "Freq",
+col = heat.colors(2),
+horiz = FALSE)
+```
+
+
+### Histograms
+```{r}
+hist(ons$Administrative_Duration)
+```
+
+
+```{r}
+hist(ons$Informational_Duration)
+```
+
+
+```{r}
+hist(ons$ProductRelated_Duration)
+```
+
+
+```{r}
+hist(ons$BounceRates)
+```
+
+
+```{r}
+hist(ons$ExitRates)
+```
+
+### Observations
+ - Most people visited the pages but did not bring any revenue to the brand.
+ - Most people visited the pages on Weekdays than the Weekends.
+ - Most people were returning visitors to the web pages.
+ - The months with the most visits were May, November, March and December.
+ - Most people spent 0 - 500 minutes in the Administrative pages.
+ - Most people spent 0 - 500 minutes in the Informational pages.
+ - Most people spent 0 - 10000 minutes in the Product Related pages.
+ - Most people had a bounce rate of 0.00 - 0.05.
+ - Most people had a exit rate of 0.00 - 0.10.
+
+## Bivariate Analysis
+### Plots
+```{r}
+library(ggplot2)
+ggplot(data=ons, aes(x=Month, y=Revenue, fill=Revenue)) +
+geom_bar(stat="identity")
+```
+
+
+```{r}
+ggplot(data=ons, aes(x=VisitorType, y=Revenue, fill=Revenue)) +
+geom_bar(stat="identity")
+```
+
+
+```{r}
+ggplot(data=ons, aes(x=Weekend, y=Revenue, fill=Revenue)) +
+geom_bar(stat="identity")
+```
+
+
+```{r}
+ggplot(data=ons, aes(x=Revenue, y=Administrative_Duration, fill=Revenue)) +
+  geom_bar(stat="identity")
+
+```
+
+
+```{r}
+ggplot(data=ons, aes(x=Revenue, y=Informational_Duration, fill=Revenue)) +
+  geom_bar(stat="identity")
+
+```
+
+
+```{r}
+ggplot(data=ons, aes(x=Revenue, y=ProductRelated_Duration, fill=Revenue)) +
+  geom_bar(stat="identity")
+
+```
+
+
+```{r}
+ggplot(data=ons, aes(x=Revenue, y=BounceRates, fill=Revenue)) +
+  geom_bar(stat="identity")
+
+```
+
+
+```{r}
+ggplot(data=ons, aes(x=Revenue, y=ExitRates, fill=Revenue)) +
+  geom_bar(stat="identity")
+
+```
+
+
+```{r}
+ggplot(data=ons, aes(x=Revenue, y=PageValues, fill=Revenue)) +
+  geom_bar(stat="identity")
+
+```
+
+
+```{r}
+# Converting character and logical columns to integers
+ons$VisitorType <- as.integer(as.factor(ons$VisitorType))
+ons$Month <- as.integer(as.factor(ons$Month))
+ons$Weekend <- as.integer(as.factor(ons$Weekend))
+
+```
+
+
+```{r}
+# Checking if the columns have been converted
+str(ons)
+```
+
+
+```{r}
+# Creating a Dataframe without the label variable
+ons1 = ons[,-c(18)]
+
+head(ons1)
+```
+
+
+### Covariance
+```{r}
+# Finding the covariance of the feature variables
+cov(ons1)
+```
+
+
+### Correlation
+```{r}
+# Finding the correlation coefficients of feature variables 
+cor(ons1)
+```
+
+
+### Correlation Matrix
+```{r}
+# Creating a correlation matrix
+library('corrplot')
+
+corrplot(cor(ons1), method = "shade")
+```
+From the correlation and correlation matrix output it shows Bounce rates and Exit rates have a high correlation between them. Most features have correlation close to zero.
+
+
+### Scatter Plots
+```{r}
+# Plotting a scatterplot between Administrative_Duration and Informational_Duration
+plot(ons$Administrative_Duration, ons$Informational_Duration, xlab="Administrative_Duration", ylab="Informational_Duration")
+```
+
+
+```{r}
+# Plotting a scatterplot between Administrative_Duration and ProductRelated_Duration
+plot(ons$Administrative_Duration, ons$ProductRelated_Duration, xlab="Administrative_Duration", ylab="ProductRelated_Duration")
+```
+
+
+```{r}
+# Plotting a scatterplot between ProductRelated_Duration and Informational_Duration
+plot(ons$ProductRelated_Duration, ons$Informational_Duration, xlab="ProductRelated_Duration", ylab="Informational_Duration")
+```
+
+
+```{r}
+# Plotting a scatterplot between Bounce Rate and Exit Rate
+plot(ons$BounceRates, ons$ExitRates, xlab="Bounce Rate", ylab="Exit Rate")
+```
+
+
+### Observations
+ - The month of November had the most people who returned revenue to the brand while the month of May had the most people who did not return revenue to the brand.
+ - The returning visitors returned more revenue compared to new visitors and others.
+ - Most of the revenue was returned on weekdays compared to weekends.
+ - Customers who spent more time in the Administrative page did not return revenue.
+ - Customers who spent more time in the Informational page did not return revenue.
+ - Customers who spent more time in the Product related page did not return revenue.
+ - Most customers who bounced off the pages in the did not return revenue.
+ - Most customers who exited the pages in the did not return revenue.
+ - Most customers who returned revenue had the most page values.
+ - Bounce rate and Exit rates had a very high positive correlation of 0.9.
+
+
+
+# Implementing the Solution
+## K Means
+```{r}
+# We will start by normalizing the feature variables
+# 
+normalize <- function(x){
+  return ((x-min(x)) / (max(x)-min(x)))
+}
+
+ons1$Administrative_Duration<- normalize(ons1$Administrative_Duration)
+ons1$ProductRelated<- normalize(ons1$ProductRelated)
+ons1$ProductRelated_Duration<- normalize(ons1$ProductRelated_Duration)
+ons1$BounceRates<- normalize(ons1$BounceRates)
+ons1$ExitRates<- normalize(ons1$ExitRates)
+
+head(ons1)
+
+```
+
+
+```{r}
+# Applying the K-means clustering algorithm with no. of k = 2
+# 
+result<- kmeans(ons1, 2) 
+
+# Previewing the no. of records in each cluster
+# 
+result$size 
+
+```
+
+
+```{r}
+# Getting the value of cluster center datapoints value  k = 2
+# 
+result$centers 
+
+```
+
+
+```{r}
+# Getting the class variable of the dataset
+#
+ons.class = ons[, 18]
+head(ons.class)
+```
+
+
+```{r}
+# Getting the records of each cluster
+# 
+tb = table(result$cluster, ons.class)
+tb
+
+```
+
+
+```{r}
+par(mfrow = c(2,2), mar = c(5,4,2,2))
+# Plotting to see how Administration and Administration Duration points have been distributed in clusters
+plot(ons1[c(1,2)], col = result$cluster)
+plot(ons1[c(1,2)], col = ons.class)
+
+# Plotting to see how Informational and Informational Duration points have been distributed in clusters
+plot(ons1[c(3,4)], col = result$cluster)
+plot(ons1[c(3,4)], col = ons.class)
+
+# Plotting to see how Product Related and Product related duration points have been distributed in clusters
+plot(ons1[c(5,6)], col = result$cluster)
+plot(ons1[c(5,6)], col = ons.class)
+
+# Plotting to see how Bounce rates and Exit rates points have been distributed in clusters
+plot(ons1[c(7,8)], col = result$cluster)
+plot(ons1[c(7,8)], col = ons.class)
+
+# Plotting to see how Page values and Operating systems points have been distributed in clusters
+plot(ons1[c(9,12)], col = result$cluster)
+plot(ons1[c(9,12)], col = ons.class)
+
+```
+
+
+
+## Hierarchical Clustering
+```{r}
+# Computing descriptive statistics
+# 
+desc_stats <- data.frame(
+  Min = apply(ons1, 2, min),    # minimum
+  Med = apply(ons1, 2, median), # median
+  Mean = apply(ons1, 2, mean),  # mean
+  SD = apply(ons1, 2, sd),      # Standard deviation
+  Max = apply(ons1, 2, max)     # Maximum
+)
+desc_stats <- round(desc_stats, 1)
+head(desc_stats)
+
+```
+
+
+```{r}
+# Scaling the dataset of feature variables
+# 
+ons1 <- scale(ons1)
+head(ons1)
+```
+
+
+```{r}
+# Computing the Euclidean Distance
+#
+d <- dist(ons1, method = "euclidean")
+
+# Performing hierarchical clustering using the Ward's method
+#
+res.hc3 <- hclust(d, method = "ward.D2" )
+res.hc3
+
+```
+
+
+```{r}
+# Plotting the Dendrogram
+#
+plot(res.hc3, cex = 0.6, hang = -1)
+```
+
+
+## Observations
+ - Most people who did not returned revenue were placed in cluster 1, also most people who returned revenue to the brand were place in cluster 1.
+ 
+ - From Hierarchical clustering most features were put on one cluster compared to the other cluster.
+
+ - Advantages of using K means in our case is it is easy to implement and scales our large dataset.
+
+ - Disadvantage of using K means is it is difficult to predict the number of k.
+
+ - Advantages of using Hierarchical clustering in our case is it provides a dendrogram that give more information on the customer behavior. It also does not require us to specify the number of clusters.
+
+ - Disadvantage of using Hierarchical clustering is clustering is not suitable for our data since it has alot of variables.
+
+# Challenging the Solution
+The solution can be challenged by performing K means with k = 4 to check how the clusters will be formed.
+
+## K Means
+```{r}
+# Applying the K-means clustering algorithm with no. of k = 4
+# 
+result<- kmeans(ons1, 4) 
+
+# Previewing the no. of records in each cluster
+# 
+result$size 
+
+```
+
+
+```{r}
+# Getting the value of cluster center datapoints value  k = 4
+# 
+result$centers 
+
+```
+
+
+```{r}
+# Getting the class variable of the dataset
+#
+ons.class = ons[, 18]
+head(ons.class)
+```
+
+
+```{r}
+# Getting the records of each cluster
+# 
+tb = table(result$cluster, ons.class)
+tb
+
+```
+
+
+
+# Recommendations
+From the analysis the following recommendations can be made:
+
+ - The sales and marketing team should market the product on weekdays since most people visited the page on weekdays.
+ 
+ - The sales and marketing team should market the product on the months of May, November, and March to capture more customers since most people visited the pages in these months.
+ 
+ - The sales and marketing team should put more focus on returning visitors since they are the visitors with the most revenue returned.
+ 
+ - The sales and marketing team should put more focus on customers who had high page values since they are the visitors with the most revenue returned.
+ 
+ - The sales and marketing team should use hierarchical clustering to study their customers behavior since the dendrogram provides more information than clustering results from K means clustering. 
+
